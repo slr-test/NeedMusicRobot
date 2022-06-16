@@ -73,7 +73,7 @@ class Mbot(Client):
         BOT_INFO = await self.get_me()
         if not path.exists('/tmp/thumbnails/'):
             mkdir('/tmp/thumbnails/')
-        for chat in AUTH_CHATS:
+        for chat in LOG_GROUP:
             await self.send_photo(chat,"https://i.ibb.co/mtGCrzm/youNeedMusic.jpg","**Bot Started.**")
         LOGGER.info(f"Bot Started As {BOT_INFO.username}\n")
     
