@@ -77,12 +77,12 @@ async def spotify_dl(_,message):
             tracks = client.album_tracks(album_id=item_id)
             for track in tracks['items']:
                 song = await fetch_spotify_track(client,track.get('id'))
-                PForCopy = await message.reply_photo(song.get('cover'),caption=f"🎧 Title : `{song['name']}`\n🎤 Artist : `{song['artist']}`\n💽 Album : `{song['album']}`\n🎼 Genre : `{song['genre']}`\n🗓 Release Year: `{song['year']}`")
+                
                 path = await download_songs(song,randomdir)
                 thumbnail = await thumb_down(song.get('cover'),song.get('name'))
                 AForCopy = await message.reply_audio(path,performer=song.get('artist'),title=f"{song.get('name')} - {song.get('artist')}",caption=f"[{song.get('name')}](https://open.spotify.com/track/{song.get('deezer_id')}) | {song.get('album')} - {song.get('artist')}",thumb=thumbnail)
                 if LOG_GROUP:
-                    await copy(PForCopy,AForCopy)
+                    await copy(AForCopy)
             return await m.delete()
     except Exception as e:
         LOGGER.error(e)
