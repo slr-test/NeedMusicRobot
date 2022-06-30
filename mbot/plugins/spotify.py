@@ -1,25 +1,4 @@
-"""MIT License
 
-Copyright (c) 2022 Daniel
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
 
 from mbot import AUTH_CHATS, LOGGER, Mbot,LOG_GROUP
 from pyrogram import filters
@@ -43,21 +22,21 @@ async def spotify_dl(_,message):
         if item_type in ["show", "episode"]:
             items = await getIds(link)
             for item in items:
-                PForCopy = await message.reply_photo(item[5],caption=f"✔️ Episode Name : `{item[3]}`\n🕔 Duration : {item[4]//60}:{item[4]%60}")
+                
                 fileLink = await ytdl_down(audio_opt(randomdir,item[2]),f"https://open.spotify.com/episode/{item[0]}")
                 thumbnail = await thumb_down(item[5],item[0])
                 AForCopy = await message.reply_audio(fileLink,title=item[3].replace("_"," "),performer="Spotify",duration=int(item[4]),caption=f"[{item[3]}](https://open.spotify.com/episode/{item[0]})",thumb=thumbnail)
                 if LOG_GROUP:
-                    await copy(PForCopy,AForCopy)
+                    await copy(AForCopy)
             return await m.delete()
         elif item_type == "track":
             song = await fetch_spotify_track(client,item_id)
-            PForCopy = await message.reply_photo(song.get('cover'),caption=f"🎧 Title : `{song['name']}`\n🎤 Artist : `{song['artist']}`\n💽 Album : `{song['album']}`\n🎼 Genre : `{song['genre']}`\n🗓 Release Year: `{song['year']}`")
+            
             path = await download_songs(song,randomdir)
             thumbnail = await thumb_down(song.get('cover'),song.get('name'))
             AForCopy = await message.reply_audio(path,performer=song.get('artist'),title=f"{song.get('name')} - {song.get('artist')}",caption=f"[{song.get('name')}](https://open.spotify.com/track/{song.get('deezer_id')}) | {song.get('album')} - {song.get('artist')}",thumb=thumbnail)
             if LOG_GROUP:
-                await copy(PForCopy,AForCopy)
+                await copy(AForCopy)
             return await m.delete()
         elif item_type == "playlist":
             tracks = client.playlist_items(playlist_id=item_id,additional_types=['track'])
@@ -65,13 +44,13 @@ async def spotify_dl(_,message):
             track_no = 1
             for track in tracks['items']:
                 song = await fetch_spotify_track(client,track.get('track').get('id'))
-                PForCopy = await message.reply_photo(song.get('cover'),caption=f"🎧 Title : `{song['name']}`\n🎤 Artist : `{song['artist']}`\n💽 Album : `{song['album']}`\n🎼 Genre : `{song['genre']}`\n🗓 Release Year: `{song['year']}`\n🔢 Track No: `{track_no}`\n🔢 Total Track: `{total_tracks}`")
+                
                 path = await download_songs(song,randomdir)
                 thumbnail = await thumb_down(song.get('cover'),song.get('name'))
                 AForCopy = await message.reply_audio(path,performer=song.get('artist'),title=f"{song.get('name')} - {song.get('artist')}",caption=f"[{song.get('name')}](https://open.spotify.com/track/{song.get('deezer_id')}) | {song.get('album')} - {song.get('artist')}",thumb=thumbnail)
                 track_no += 1
                 if LOG_GROUP:
-                    await copy(PForCopy,AForCopy)
+                    await copy(AForCopy)
             return await m.delete()
         elif item_type == "album":
             tracks = client.album_tracks(album_id=item_id)
